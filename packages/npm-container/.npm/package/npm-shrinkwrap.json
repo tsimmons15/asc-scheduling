@@ -1,0 +1,15 @@
+{
+  "dependencies": {
+    "free-gaussian": {
+      "version": "0.1.0"
+    },
+    "trueskill": {
+      "version": "0.0.2",
+      "dependencies": {
+        "free-gaussian": {
+          "version": "0.1.0"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,110 @@
+<!--
+
+	The code for the Tournaments page
+	First column displays the current ranking of the players, after having been passed through the trueskill algorithm
+	Second provides a way for players to report a match
+-->
+
+<!--Template for the tournament page-->
+<template name="tournament">
+	<div class="row">
+		<div class="col-xs-6 col-md-4">
+			{{>currentStandings}}
+		</div>
+		<div class="col-xs-6 col-md-8">
+			{{> matchResults}}
+		</div>
+	</div>
+</template>
+
+<!--Current standings is the first column-->
+<template name="currentStandings">
+	<div class="row">
+		<div class="col-xs-12">
+			<h1>Current Standings</h1>
+		</div>
+		<div class="col-xs-12" style="overflow-y: auto;max-height: 500px;">
+			<ol class="panel-group" id="accordion">
+				{{#each list}}
+					<li class="panel panel-default">
+						<div class="panel-heading">
+							<h4 class="panel-title">
+								<a data-toggle="collapse" data-parent="#accordion" href="#collapse{{_id}}">
+									{{username}}
+								</a>
+							</h4>
+						</div>
+						<div id="collapse{{_id}}" class="panel-collapse collapse">
+							<div class="panel-body">
+								<input id="profile" class="btn btn-primary" type="button" value="See Profile" />
+							</div>
+						</div>
+					</li>
+				{{else}}
+					<div>No other users registered, yet!</div>
+				{{/each}}
+			</ol>
+			
+		</div>
+	</div>
+</template>
+
+<!--Match results is the second column-->
+<template name="matchResults">
+	<div class="row">
+		{{#if currentUser}}
+			<div class="col-xs-12 text-center">
+				<h1 id="matchresultheader">Match Result</h1>
+			</div>
+			<div class="col-xs-12">
+				{{#if playerCount}}
+					<form class="form-default" id="updateStanding">
+						<div class="col-xs-11 text-right">
+							<p>Winner:</p>
+						</div>
+						<div class="col-xs-12">
+							<label for="player1">Player 1:</label>
+							<div class="row">
+								<div class="col-xs-8">
+									<select class="form-control" name="player1" id="player1">
+										{{#with user}}
+											<option value="{{_id}}" selected>{{username}}</option>
+										{{/with}}
+									</select>
+								</div>
+								<div class="col-xs-4 text-right">
+									<input class="form-control" type="radio" name="radWinner" value="1"/>
+								</div>
+							</div>
+						</div>
+						<div class="col-xs-12">
+							<label for="player2">Player 2:</label>
+							<div class="row">
+								<div class="col-xs-8">
+									<select class="form-control" name="player2" id="player2">
+										<option value="None" disabled selected style="display:none;">Select...</option>
+										{{#each playerList}}
+											<option value={{_id}}>{{username}} </option>
+										{{/each}}
+									</select>
+								</div>
+								<div class="col-xs-4 text-right">
+									<input class="form-control" type="radio" name="radWinner" value="2"/>
+								</div>
+							</div>
+						</div>
+						<div class="col-xs-11">
+							<input class="form-control btn btn-primary" type='submit' value='Update Standing'/>
+						</div>
+					</form>
+				{{else}}
+					<p>No other players currently registered...</p>
+				{{/if}}
+			</div>
+		{{else}}
+			<div class="col-xs-12 text-right">
+				<p>Login to be able to report a game...</p>
+			</div>
+		{{/if}}
+	</div>
+</template>

@@ -1,0 +1,206 @@
+<!--
+TABLE OF CONTENTS
+Below are the opening tags in the order they are declared in
+<head>
+<template name="layout">
+<template name="displayHeader">
+<template name="loading">
+<template name="home">
+
+ctrl-f and look for the header to quickly move around the file
+-->
+
+
+<head>
+	<meta charset="utf-8" />
+	<title>Ranked Chess Leaderboard</title>
+	
+	<!--Styles moved to something.css, possibly renamed to chess.css?-->
+	
+</head>
+
+
+<!--
+
+	The following is used to define default behavior for the website. Regardless of page, the next two
+	will be shown. Behavior is defined in lib/routes.js
+
+-->
+<template name="layout">
+	<header>
+		{{>displayHeader}}
+	</header>
+	
+	<div class="container">
+		{{>yield}}
+	</div>
+</template>
+
+<template name="loading">
+	<p>Loading...</p>
+</template>
+
+<template name="displayHeader">
+	<nav class="navbar navbar-default">
+	  <div class="container-fluid">
+		<!-- Brand and toggle get grouped for better mobile display -->
+		<div class="navbar-header">
+		  <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+			<span class="sr-only">Toggle navigation</span>
+			<span class="icon-bar"></span>
+			<span class="icon-bar"></span>
+			<span class="icon-bar"></span>
+		  </button>
+		  {{> navBrand}}
+		</div>
+		
+		<!-- Collect the nav links, forms, and other content for toggling -->
+		<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+		  {{> navItems}}
+		</div><!-- /.navbar-collapse -->
+	  </div><!-- /.container-fluid -->
+	</nav>
+</template>
+
+<template name="navBrand">
+	<a class="navbar-brand" href="{{pathFor route='home'}}">Home</a>
+</template>
+
+<template name="navItems">
+	<ul class="nav navbar-nav">
+	    <li class="{{activeIfTemplateIs 'tournament'}}"><a href="{{pathFor route='tournament'}}">Tournament</a></li>
+		<!--active-->
+	</ul>
+	<ul class="nav navbar-nav navbar-right">
+		<li>
+			{{#with currentUser}}
+				<p class="navbar-text">Welcome, {{username}} | <a href="#" class="navbar-link logout">Logout</a></p>
+			{{else}}
+				<a href="{{pathFor route='login'}}">Login</a>
+			{{/with}}
+		</li>
+	</ul>
+</template>
+
+<!--
+
+	The below code is for the Home page, currently doesn't show much while logged in
+
+-->
+
+<template name="home">
+	{{#if isAdmin}}
+		{{> admin}}
+	{{else}}
+		{{> isPlayer}}
+	{{/if}}
+</template>
+
+
+<template name="isPlayer">
+	{{#with currentUser}}
+	<div class="row">
+		<div class="col-xs-2">
+			<div class="thumbnail">
+				<img src="/images/blank.jpg" />
+			</div>
+		</div>
+		<div class="col-xs-10">
+			<h2 class="heading">{{username}}</h2>
+			<div class="row">
+				<div class="col-xs-4">
+					Department: {{profile.department}}
+				</div>
+				<div class="col-xs-4">
+					Room: 4-100
+				</div>
+			</div>	
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-xs-2">
+			<p>Stuff will go here...</p>
+		</div>
+		<div class="col-xs-6">
+			<!--363-->
+			<div class="row well well-sm column">
+				<div class="row" style="min-height:95px;">
+					<div class="col-xs-1 col-md-1">
+						<br />
+					</div>
+					<div class="col-xs-3 col-md-3">
+						<p>Favorite Book:</p>
+					</div>
+					<div class="col-xs-8 col-md-8">
+						<textarea class="form-control" name="personalEntry"></textarea>
+					</div>
+				</div>
+				<div class="row" style="min-height:95px;">
+					<div class="col-xs-1 col-md-1">
+						<br />
+					</div>
+					<div class="col-xs-3 col-md-3">
+						<p>Favorite Movie:</p>
+					</div>
+					<div class="col-xs-8 col-md-8">
+						<textarea class="form-control" name="personalEntry"></textarea>
+					</div>
+				</div>
+				<div class="row" style="min-height:95px;">
+					<div class="col-xs-1 col-md-1">
+						<br />
+					</div>
+					<div class="col-xs-3 col-md-3">
+						<p>Favorite Quotation:</p>
+					</div>
+					<div class="col-xs-8 col-md-8">
+						<textarea class="form-control" name="personalEntry"></textarea>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="col-xs-4 well well-sm column">
+			{{> eventVoting}}
+		</div>
+	</div>
+	{{/with}}
+</template>
+
+<template name="eventVoting">
+	<div class="row">
+		<div class="col-xs-12">
+			{{#with activities}}
+				<form class="form-default" id="voting">
+					<div class="row">
+						<div class="col-xs-12">
+							<p>Order the events below to vote for your favorite activities
+								<br />
+								<small>Place your prefered activities closer to the top of the list</small>
+							</p>
+						</div>
+						<ul id='list' class='container inner-column'>
+								{{#each activities}}
+									<li id="{{_id}}" class="events">&equiv;{{event}}</li>
+								{{/each}}
+						</ul>
+						<div class="col-xs-12" style="margin:5px;">
+							<div class="input-group">
+								<input class="form-control" type="text" id="newEvent" name="newEvent" placeholder="Enter name of new event here" />
+								<span class="input-group-btn">
+									<input type="submit" class="btn btn-primary" value="Add">
+								</span>
+							</div>
+						</div>
+					</div>
+				</form>
+				<form id="vote">
+					<div class="row">
+						<div class="col-xs-12">
+							<input class="form-control btn btn-primary" type="submit" value="Vote" />
+						</div>
+					</div>
+				</form>
+			{{/with}}
+		</div>
+	</div>
+</template>

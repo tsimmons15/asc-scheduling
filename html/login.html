@@ -1,0 +1,89 @@
+<!--
+
+	Login page the user is directed to if they try to view the Home while not logged in
+
+-->
+
+<template name="login">
+	<div class="row">
+		<div class="col-md-6">
+			{{>signin}}
+		</div>
+		<div class="col-md-6">
+			{{>register}}
+		</div>
+	</div>
+</template>
+
+<!--
+
+	Gives the user the ability to login with a pre-existing account
+
+-->
+
+<template name="signin">
+	<form class="form-default login">
+		<div class="well well-default">
+			<div class="row">
+				<div class="col-md-12 text-left">
+					<h2>Login</h2>
+				</div>
+			</div>
+			
+			<div class="row">
+				<div class="col-md-12">
+					<div class="row">
+						<div class="col-md-8 text-left">
+							<input class="form-control" type="text" name="user" placeholder='Username or Email'/>
+						</div>
+					</div>
+				</div>
+				<div class="col-md-12">
+					<div class="row">
+						<div class="col-md-8 text-left">
+							<input class="form-control" type="password" name="password" placeholder='Password'/>
+						</div>
+					</div>
+				</div>
+				<div class="col-md-12">
+					<br />
+				</div>
+				<div class="col-md-12">
+					<input class="form-control btn btn-primary" type="submit" value="Sign In"/>
+				</div>
+			</div>
+		</div>
+	</form>
+</template>
+
+<!-- 
+
+	If the user, on the login screen, chooses to register instead, this page is where they're routed
+
+-->
+
+<template name="register">
+	<form class="form-default register">
+		<div class="well well-default">
+			<div class="row">
+				<div class="col-md-6">
+					<h2>New Contestant?</h2>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-5">
+					<input class="form-control" type="text" name="firstName" placeholder='First Name' />
+				</div>
+				<div class="col-md-5">
+					<input class="form-control" type="text" name="lastName" placeholder='Last Name' />
+				</div>
+				<div class="col-md-10">
+					<input class="form-control" type="text" name="email" placeholder='@valencia.com email' />
+				</div>
+				<div class="col-md-12">
+					<input class="form-control btn btn-primary" type="submit" value="Register"/>
+				</div>
+			</div>
+		</div>
+	</form>
+</template>
