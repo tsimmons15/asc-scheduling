@@ -1,18 +1,34 @@
+//The event handlers for the code in the leaderboard.html file
+
+//Handles events for the displayHeader template
 Template.displayHeader.helpers({
+	//This handler stores where the logo is stored
 	'logo': function() {
+		//If this needs to change, just make sure it is still in images
 		return "/images/valencialogo.png";
 	}
 });
+
+//Handles events for the navItems template
 Template.navItems.helpers({
+	//Supposed to handle the "current page", so that the header shows more visually
+	// what the currently active page
+	//Takes the current template
 	'activeIfTemplateIs': function(template) {
+		//Get the current "route"
 		var current = Router.current();
+		//If the two templates are the same
 		if (template == current.lookupTemplate()) {
+			//Return the active class
 			return 'active';
 		} else {
+			//return nothing
 			return '';
 		}
 	}
 });
+
+//
 Template.displayHeader.events({
  'click .logout': function() {
 	Meteor.logout();
