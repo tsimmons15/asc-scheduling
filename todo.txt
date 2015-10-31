@@ -1,0 +1,9 @@
+#List of to-do items for the asc-scheduling project
+
+- Port over the recess scheduling system Tonny created
+- Fix issue with voting
+- Update user database with information provided by Anthony
+- Implement invitation system overhaul for Register page
+- Begin planning functionality for manager scheduling system
+- General improvements anybody can think of
+- Add other todo items

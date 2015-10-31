@@ -49,3 +49,23 @@ Server is the JS server, the heart of Meteor
 		you will have to write a method or service on the Server
 	If you cannot find code on the client, try looking in the Server
 		Especially if it deals with the database or User settings
+
+Meteor stores everything using MongoDB, a JSON encoded database
+The structure of the user database is below:
+/	The root of the database
+	User 					A registered user
+		username			The user's username
+		password			The user's password
+		profile				The meat of the user's profile
+			games played 	The number of the games played
+			department 		The department code for the center the employee works, in the case of multiple depts., their main/first department
+			rank			The rank of the user after a game
+			skill 			An array of two numbers: [the current skill ranking of the user, the confidence the system has in the ranking]
+
+Each user in the database follows this pattern
+This is by no means a finished description of the user
+For one, we need to add their email address, their first/last name, a location of their picture, a system for getting their desired hours, and whatever else the system will end up becoming...
+The basic structure will survive:
+stuff that is basic/necessary for Meteor.Accounts to function will be children of the User
+stuff that is not necessary for Meteor.Accounts, things specific to this application, will end up in Profile
+The reason for this is that Meteor.Accounts resists letting us add to the root easily. Profile is the only thing we have real control over the structure of

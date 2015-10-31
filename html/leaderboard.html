@@ -36,10 +36,19 @@ ctrl-f and look for the header to quickly move around the file
 	</div>
 </template>
 
+<!--
+	Not currently used
+	If anyone has any ideas for what the splash page would look like should we need it,
+	  go ahead and start filling it out
+-->
 <template name="loading">
 	<p>Loading...</p>
 </template>
 
+<!--
+	The header for the website
+	This will always be visible
+-->
 <template name="displayHeader">
 	<nav class="navbar navbar-default">
 	  <div class="container-fluid">
@@ -62,17 +71,34 @@ ctrl-f and look for the header to quickly move around the file
 	</nav>
 </template>
 
+<!-- This is the navBrand, if we wish to add a sort of logo, here would probably be another good spot for it-->
 <template name="navBrand">
 	<a class="navbar-brand" href="{{pathFor route='home'}}">Home</a>
 </template>
 
+<!-- These are the individual nav items, change this as the page grows/shrinks -->
 <template name="navItems">
 	<ul class="nav navbar-nav">
+		<!-- 
+			This is one of the ways we could implement showing the user where they are currently
+			It's the Bootstrap default way, if I recall correctly, but for some reason it's not
+			working perfectly. It says we're always in Tournament, or we're nowhere...
+			Ideally, {{activeIfTemplateIs 'tournament'}} would be replaced with active if it works
+			 and we're in the tournament page
+			Another possible problem: tournament is too specific, need to make sure we're using the general template
+		-->
 	    <li class="{{activeIfTemplateIs 'tournament'}}"><a href="{{pathFor route='tournament'}}">Tournament</a></li>
 		<!--active-->
 	</ul>
 	<ul class="nav navbar-nav navbar-right">
 		<li>
+			<!--
+				Determine if the visitor is logged in
+				If so
+					Show logout and their name
+				Else
+					Show login
+			-->
 			{{#with currentUser}}
 				<p class="navbar-text">Welcome, {{username}} | <a href="#" class="navbar-link logout">Logout</a></p>
 			{{else}}
@@ -96,7 +122,9 @@ ctrl-f and look for the header to quickly move around the file
 	{{/if}}
 </template>
 
-
+<!--
+	The user is a player, so show their profile
+-->
 <template name="isPlayer">
 	{{#with currentUser}}
 	<div class="row">
