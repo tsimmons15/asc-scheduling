@@ -16,69 +16,69 @@ The structure is as follows:
 
 The root is the root of the project, the main directory.
 
-Client stores the code which will run locally on the user's browser.
+	Client stores the code which will run locally on the user's browser.
 
-	No sensitive information should be hard-coded in this folder
+		No sensitive information should be hard-coded in this folder
 
-	No code in this folder will, at time of launch, have access
+		No code in this folder will, at time of launch, have access
 
-		to the database or some specific features, for security reasons
+			to the database or some specific features, for security reasons
 
-	The client directory should be just .js files.
+		The client directory should be just .js files.
 
-	Ignore lib, it's used by Bootstrap. Unless you need to modify the .less files
+		Ignore lib, it's used by Bootstrap. Unless you need to modify the .less files
 
-		In which case, do not ignore lib. It's used by Bootstrap.
+			In which case, do not ignore lib. It's used by Bootstrap.
 
-Html will store the html templates
+	Html will store the html templates
 
-	The templates are (roughly) based on their function.
+		The templates are (roughly) based on their function.
 
-	If you have a better idea for the name of a file, go ahead and change it
+		If you have a better idea for the name of a file, go ahead and change it
 
-		Make sure you update other references...
+			Make sure you update other references...
 
-	I have the default CSS here, because it seemed the right fit.
+		I have the default CSS here, because it seemed the right fit.
 
-Lib is sort of a catch-all for code
+	Lib is sort of a catch-all for code
 
-	It is neither the server, nor the client, but both.
+		It is neither the server, nor the client, but both.
 
-	Do not assume you have access to any specific piece of data at all times
+		Do not assume you have access to any specific piece of data at all times
 
-	Split into two files currently:
+		Split into two files currently:
 
-		common, which is mainly setting up the databases currently
+			common, which is mainly setting up the databases currently
 
-		routes, which sets up the paging behavior of the website
+			routes, which sets up the paging behavior of the website
 
-			Currently using IronRouter
+				Currently using IronRouter
 
-			If you change the name of any files, make sure you update
-				routes.js
+				If you change the name of any files, make sure you update
+					routes.js
 
-Packages is for specific packages installed and used by Meteor
+	Packages is for specific packages installed and used by Meteor
 
-	Ignore packages, for the most part
+		Ignore packages, for the most part
 
-Public is public
+	Public is public
 
-	If/When we get images to upload, they will end up here
-		inside images
+		If/When we get images to upload, they will end up here
+			inside images
 
-		This is necessary for meteor's operation
+			This is necessary for meteor's operation
 
-Server is the JS server, the heart of Meteor
+	Server is the JS server, the heart of Meteor
 
-	The code ran here has implicit security. Code stored here has implicit
-		security, but be mindful of what you store here anyway
+		The code ran here has implicit security. Code stored here has implicit
+			security, but be mindful of what you store here anyway
 
-	If you try to implement something in the client, and it fails due to permissions
-		you will have to write a method or service on the Server
+		If you try to implement something in the client, and it fails due to permissions
+			you will have to write a method or service on the Server
 
-	If you cannot find code on the client, try looking in the Server
+		If you cannot find code on the client, try looking in the Server
 
-		Especially if it deals with the database or User settings
+			Especially if it deals with the database or User settings
 
 Meteor stores everything using MongoDB, a JSON encoded database
 
