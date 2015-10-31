@@ -52,15 +52,15 @@ Server is the JS server, the heart of Meteor
 
 Meteor stores everything using MongoDB, a JSON encoded database
 The structure of the user database is below:
-/	The root of the database
-	User 					A registered user
-		username			The user's username
-		password			The user's password
-		profile				The meat of the user's profile
-			games played 	The number of the games played
-			department 		The department code for the center the employee works, in the case of multiple depts., their main/first department
-			rank			The rank of the user after a game
-			skill 			An array of two numbers: [the current skill ranking of the user, the confidence the system has in the ranking]
+	/	The root of the database
+		- User 					A registered user
+			- username			The user's username
+			- password			The user's password
+			- profile				The meat of the user's profile
+				- games played 	The number of the games played
+				- department 		The department code for the center the employee works, in the case of multiple depts., their main/first department
+				- rank			The rank of the user after a game
+				- skill 			An array of two numbers: [the current skill ranking of the user, the confidence the system has in the ranking]
 
 Each user in the database follows this pattern
 This is by no means a finished description of the user
