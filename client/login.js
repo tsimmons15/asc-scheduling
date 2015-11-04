@@ -95,7 +95,6 @@ Template.register.onRendered(function() {
 		submitHandler: function (event) {
 			var firstName = $('[name=firstName]').val();
 			var lastName = $('[name=lastName]').val();
-			//var department = $('[name=department]').val();
 			var vid = $('[name=userID]').val();
 			/*
 				Using Accounts.sendEnrollmentEmail(),
@@ -104,13 +103,17 @@ Template.register.onRendered(function() {
 				get the email, and get full control over account
 			*/
 			Accounts.createUser({
-				username:firstName,
+				email: email,
+				username: username,
 				password: 'password',
 				profile: {
 					gamesPlayed: 0,
 					department: ' ',
 					rank:0,
 					skill: [25.0, 25.0/3.0]
+					//The start and end of the user's shift
+					//This will probably be filled in with Tonny's port
+					shift: [0 , 0]
 				}
 			}, function(error) {
 				if(error) {

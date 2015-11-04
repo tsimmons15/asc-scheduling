@@ -5,5 +5,9 @@
 - Update user database with information provided by Anthony
 - Implement invitation system overhaul for Register page
 - Begin planning functionality for manager scheduling system
+	- Email individual schedules after they're set
+	- Generate Schedule Fliers
+	- Upgrade/Update/Integrate Front Desk's 360 Planner 
+		- Spreadsheet overview of all tutor's schedules
 - General improvements anybody can think of
 - Add other todo items
