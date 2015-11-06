@@ -1,6 +1,11 @@
 //The MeteorJS implementation of trueskill
 var trueskill = Meteor.npmRequire('trueskill');
 
+//The MAIL_URL environment variable
+//Worst case scenario, set up in a file in server/lib
+//process.env.MAIL_URL = 'info_for_mail_server';
+
+
 //Meteor.methods are the lists of methods the server will expose to the client
 //Meteor.methods is a JSON object, a collection of name:function pairs
 Meteor.methods({
