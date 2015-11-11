@@ -4,6 +4,12 @@
 	this.prevSelected = new ReactiveVar(false);
 };*/
 
+Template.tournament.helpers({
+	'verified': function() {
+		return Meteor.users().emails[0].verified;
+	}
+});
+
 //Helper functions for the currentStandings template
 Template.currentStandings.helpers({
  //Get the list of current users (excluding the admin account), and sort by the trueskill attribute
