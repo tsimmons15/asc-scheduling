@@ -1,3 +1,10 @@
+//Helper functions for the resetPassword template
+Template.resetPassword.helpers({
+	'currentUser': function() {
+		return Meteor.user();
+	}
+});
+
 //Helper functions for the signin template
 Template.signin.helpers({
 	
@@ -24,8 +31,7 @@ Template.register.events({
 
 //Function that is ran when the signin template is loaded
 Template.signin.onRendered(function() {
-	//It's supposed to help validate the data, but I've noticed it doesn't seem to work all that well...
-	//No idea why
+	//Double check the names/ids of the HTML elements associated with the below
 	var validator = $('.login').validate({
 		//Messages to display when the various fields contain issues
 		messages: {
@@ -113,7 +119,8 @@ Template.register.onRendered(function() {
 							skill: [25.0, 25.0/3.0],
 							//The start and end of the user's shift
 							//This will probably be filled in with Tonny's port
-							shift: [0 , 0]
+							shift: [0 , 0],
+							verified: false
 						}
 					}, function(error) {
 						if(error) {
