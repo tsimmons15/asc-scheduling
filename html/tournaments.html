@@ -7,14 +7,18 @@
 
 <!--Template for the tournament page-->
 <template name="tournament">
-	<div class="row">
-		<div class="col-xs-6 col-md-4">
-			{{>currentStandings}}
+	{{#if verified}}
+		<div class="row">
+			<div class="col-xs-6 col-md-4">
+				{{>currentStandings}}
+			</div>
+			<div class="col-xs-6 col-md-8">
+				{{> matchResults}}
+			</div>
 		</div>
-		<div class="col-xs-6 col-md-8">
-			{{> matchResults}}
-		</div>
-	</div>
+	{{else}}
+		
+	{{/if}}
 </template>
 
 <!--Current standings is the first column-->
