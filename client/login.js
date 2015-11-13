@@ -1,6 +1,7 @@
 //Helper functions for the resetPassword template
 Template.resetPassword.helpers({
-	'currentUser': function() {
+	'userInfo': function() {
+		console.log(Meteor.user());
 		return Meteor.user();
 	}
 });
