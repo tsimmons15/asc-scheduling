@@ -19,8 +19,11 @@
 
 <template name="resetPassword">
 	<h1>TESTING!</h1>
-	{{#with currentUser}}
-		<p>Email: {{email}}</p>
+	{{#with userInfo}}
+		<p>Email: 
+		{{#each emails}}
+			{{this.address}}
+		{{/each}}</p>
 		<p>User: {{username}}</p>
 		<p>Password: {{password}}</p>
 	{{/with}}

@@ -6,6 +6,13 @@ Template.userProfile.helpers({
 	 }
 });
 
+Template.userProfile.events({
+	'click #resetPassword': function() {
+		console.log('Testing, resetPassword clicked');
+		Meteor.call('passwordReset', Meteor.userId());
+	}
+});
+
 //Your guess is as good as mine...
 Template.profile.helpers({
 	 'user': function() {

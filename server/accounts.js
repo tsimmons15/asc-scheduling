@@ -41,11 +41,24 @@ Accounts.emailTemplates.verifyEmail.text = function (user, url) {
      + enrollLink;
 };
 
+//Same as above, but for resetting the user's password
+Accounts.emailTemplates.resetPassword.text = function (user, url) {
+   enrollLink = "http://localhost:3000/reset-password/" + url.split('/')[5];
+   //Change the message to whatever it needs to be...
+   return "You have been selected to participate in building a better future!"
+     + " To activate your account, simply click the link below:\n\n"
+     + enrollLink;
+};
+
 Meteor.methods({
 	//Send the enrollment email, since a user has tried to register...
 	'userEnroll': function(userID, genPassword) {
 		console.log(userID);
 		console.log(genPassword);
 		Accounts.sendEnrollmentEmail(userID);
+	}, 
+	'passwordReset': function(userID) {
+		console.log(userID);
+		Accounts.sendResetPasswordEmail(userID);
 	}
 });
