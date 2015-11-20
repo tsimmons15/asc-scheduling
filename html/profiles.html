@@ -7,17 +7,17 @@
 		<div class="row">
 			<div class="col-xs-2">
 				<div class="thumbnail">
-					<img src="/images/blank.jpg" />
+					<img src="/images/{{profile.image}}" />
 				</div>
 			</div>
 			<div class="col-xs-10">
-				<h2 class="heading">{{username}}</h2>
+				<h2 class="heading">{{profile.firstName}} {{profile.surname}} </h2>
 				<div class="row">
 					<div class="col-xs-4">
 						Department: {{profile.department}}
 					</div>
 					<div class="col-xs-4">
-						Room: 4-100
+						Room: {{profile.office}}
 					</div>
 				</div>	
 			</div>

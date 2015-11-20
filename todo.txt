@@ -2,8 +2,14 @@
 
 - Port over the recess scheduling system Tonny created
 - Fix issue with voting
+	- Probably just an issue with the server code being on client
 - Update user database with information provided by Anthony
-- Implement invitation system overhaul for Register page
+X Implement invitation system overhaul for Register page
+    X Back-end is finished, for the most part
+	- Validate email for @valenciacollege.edu
+		- validator currently in use doesn't support regex easily...
+	- Just needs HTML pages/forms to go along with it
+	- Also need to look into the Mail Server used by the application
 - Begin planning functionality for manager scheduling system
 	- Email individual schedules after they're set
 	- Generate Schedule Fliers
