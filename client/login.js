@@ -86,7 +86,7 @@ Template.signin.onRendered(function() {
 Template.register.onRendered(function() {
 	var userID = 0, genPassword = 0;
 	//Same as above
-	var validator = $('.register').validate({ 
+	var validator = $('.register').validate({
 		messages: {
 			firstName: {
 				required: "You must enter your first name"
@@ -102,6 +102,8 @@ Template.register.onRendered(function() {
 			var firstName = $('[name=firstName]').val();
 			var lastName = $('[name=lastName]').val();
 			var email = $('[name=email]').val();
+			
+		
 			/*
 				Using Accounts.sendEnrollmentEmail(),
 				we can create accounts without passwords
@@ -110,18 +112,20 @@ Template.register.onRendered(function() {
 			*/
 			userID = Accounts.createUser({
 						email: email,
-						//username: username,
 						//Randomly generate better password, for initial login...
 						password: 'password',
 						profile: {
+							firstName: firstName,
+							surname:   lastName,
 							gamesPlayed: 0,
 							department: ' ',
+							office: '4-100',
+							image: 'blank.jpg',
 							rank:0,
 							skill: [25.0, 25.0/3.0],
 							//The start and end of the user's shift
 							//This will probably be filled in with Tonny's port
-							shift: [0 , 0],
-							verified: false
+							shift: [0 , 0]
 						}
 					}, function(error) {
 						if(error) {
