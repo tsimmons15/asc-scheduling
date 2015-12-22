@@ -1,5 +1,3 @@
-Meteor.subscribe('active_template');
-
 //The event handlers and helper functions for the code in the leaderboard.html file
 
 //Helper functions for the displayHeader template
@@ -22,7 +20,6 @@ Template.displayHeader.events({
 Template.navBrand.helpers({
 	//Tracks whether the home page is the current template
 	'activeIfTemplateIs': function(template) {
-		console.log(active_template(template));
 		return active_template(template);
 	}
 });
@@ -33,7 +30,6 @@ Template.navItems.helpers({
 	// what the currently active page
 	//Takes the current template
 	'activeIfTemplateIs': function(template) {
-		console.log(active_template(template));
 		return active_template(template);
 	}
 });
@@ -68,9 +64,6 @@ Template.eventVoting.events({
 		var id = Meteor.userId();
 		var elements = [];
 		$('#list').children().each(function(i, val) {
-			console.log(this.id);
-			console.log(this);
-			console.log(i);
 			elements[i] = this.id;
 		});
 		console.log(elements);
@@ -109,14 +102,8 @@ Template.eventVoting.onRendered( function() {
 active_template = function(template) {
 	//If the two templates are the same
 	var current = Router.current().lookupTemplate();
-	console.log(typeof(template));
-	console.log(template);
-	console.log(typeof(current));
-	console.log(current);
-	console.log(template == current);
 	if (template == current) {
 		//Return the active class
-		console.log('This is the active class...');
 		return 'active';
 	} else {
 		//return nothing

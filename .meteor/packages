@@ -6,7 +6,6 @@
 
 autopublish
 insecure
-iron:router
 meteorhacks:npm
 reactive-var
 themeteorchef:jquery-validation
@@ -15,7 +14,6 @@ npm-container
 jquery
 nemo64:bootstrap
 less
-ahref:dragula
 standard-minifiers
 meteor-base
 mobile-experience
@@ -30,3 +28,5 @@ ejson
 spacebars
 check
 email
+ahref:dragula
+iron:router

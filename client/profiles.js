@@ -8,9 +8,7 @@ Template.userProfile.helpers({
 
 Template.userProfile.events({
 	'click #resetPassword': function() {
-		console.log('Testing, resetPassword clicked');
-		console.log(Meteor.userId());
-		Router.go('reset_password');
+		$("#change_password_modal").modal("show");
 	}
 });
 

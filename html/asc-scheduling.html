@@ -100,7 +100,7 @@ ctrl-f and look for the header to quickly move around the file
 					Show login
 			-->
 			{{#with currentUser}}
-				<p class="navbar-text">Welcome, {{profile.firstName}} | <a href="#" class="navbar-link logout">Logout</a></p>
+				<p class="navbar-text">Welcome, {{profile.first_name}} | <a href="#" class="navbar-link logout">Logout</a></p>
 			{{else}}
 				<a href="{{pathFor route='login'}}">Login</a>
 			{{/with}}
@@ -119,6 +119,7 @@ ctrl-f and look for the header to quickly move around the file
 		{{> admin}}
 	{{else}}
 		{{> userProfile}}
+		{{> change_password}}
 	{{/if}}
 </template>
 

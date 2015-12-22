@@ -6,6 +6,8 @@
 	<div class="row">
 		<div class="col-md-6">
 			{{>signin}}
+			{{> recover_password}}
+			{{> show_modal_reset }}
 		</div>
 		<div class="col-md-6">
 			{{>register}}
@@ -13,20 +15,9 @@
 	</div>
 </template>
 
-<!-- 
-	Allows the user to change their password
--->
-
-<template name="resetPassword">
-	<h1>TESTING!</h1>
-	{{#with userInfo}}
-		<p>Email: 
-		{{#each emails}}
-			{{this.address}}
-		{{/each}}</p>
-		<p>User: {{username}}</p>
-		<p>Password: {{password}}</p>
-	{{/with}}
+<template name="show_modal_reset">
+	{{> reset_password }}
+	{{ modal_reset_password '' }}
 </template>
 
 <!--
@@ -57,6 +48,13 @@
 						</div>
 					</div>
 				</div>
+				<div class="col-md-2">
+					<span>&nbsp;</span>
+				</div>
+				<div class="col-md-6">
+					<a href="#" 
+						style="font-size:10px;">Forgot Password?</a>
+				</div>
 				<div class="col-md-12">
 					<br />
 				</div>
@@ -69,8 +67,141 @@
 </template>
 
 <!-- 
-	If the user, on the login screen, chooses to register instead, this page is where they're routed
+	Modal window to start the process of recovering a user's password
 -->
+<template name="recover_password">
+	<div class="modal fade in" id="recover_password_modal" 
+		  tabindex="-1" role="dialog">
+		<div class="modal-dialog">
+		  <div class="modal-content">
+		    <div class="modal-header">
+		      <button type="button" class="close" data-dismiss="modal">&times;</button>
+		      <h4 class="modal-title">Recover Password</h4>
+		    </div>
+		    <div class="modal-body">
+				<form class="form-default recover_password_form">
+					<div class="form-group">
+						<label for="recover_email">Send recovery email to</label>
+						<input class="required" type="text" id="recover_email" 
+							name="recover_email" 
+							placeholder="email@valenciacollege.edu" />
+					</div>
+					<div class="form-group">
+						<div class="row">
+							<div class="col-md-6">
+								<input type="button" 
+									   class="form-control btn btn-default"
+									   id="recovery_cancel" name="recover_cancel" 
+									   value="Cancel"/>
+							</div>
+							<div class="col-md-6">
+								<input type="submit"
+									   class="form-control btn btn-default"
+									   id="recovery_submit" name="recover_submit"
+									   value="Recover password" />
+							</div>
+						</div>
+					</div>
+				</form>
+		    </div>
+		  </div>
+		</div>
+  	</div>
+</template>
+
+<!-- 
+	Allows the user to reset their password after having asked to 
+	recover their password.
+-->
+<!-- 
+	Non-modal version
+<template name="reset_password">
+	<form class="form-default reset_password_form">
+		<div class="form-group">
+			<label for="reset_new_password">New Password: </label>
+			<input type="password" class="form-control required" 
+				id="reset_new_password" 			
+				name="reset_new_password"
+				placeholder="New Password" />
+		</div>
+		<div class="form-group">
+			<label for="reset_reenter_password">Re-enter Password:</label>
+			<input type="password" class="form-control required"
+				id="reset_reenter_password"
+				name="reset_reenter_password"
+				placeholder="Re-enter Password" />
+		</div>
+		<div class="form-group">
+			<div class="row">
+				<div class="col-md-6">
+					<button type="button" id="reset_cancel" 
+										class="form-control 
+											  btn btn-default">
+						Cancel
+					</button>
+				</div>
+				<div class="col-md-6">
+					<button type="submit" class="form-control 
+												btn btn-default">
+						Change Password
+					</button>
+				</div>
+			</div>
+		</div>
+	</form>
+</template>
+-->
+<template name="reset_password">
+	<div class="modal" id="reset_password_modal" 
+		  tabindex="-1" role="dialog">
+		<div class="modal-dialog">
+		  <div class="modal-content">
+		    <div class="modal-header">
+		      <button type="button" class="close" data-dismiss="modal">&times;</button>
+		      <h4 class="modal-title">Recover Password</h4>
+		    </div>
+		    <div class="modal-body">
+				<form class="form-default reset_password_form">
+					<div class="form-group">
+						<label for="reset_new_password">New Password: </label>
+						<input type="password" class="form-control required" 
+							id="reset_new_password" 			
+							name="reset_new_password"
+							placeholder="New Password" />
+					</div>
+					<div class="form-group">
+						<label for="reset_reenter_password">Re-enter Password:</label>
+						<input type="password" class="form-control required"
+							id="reset_reenter_password"
+							name="reset_reenter_password"
+							placeholder="Re-enter Password" />
+					</div>
+					<div class="form-group">
+						<div class="row">
+							<div class="col-md-6">
+								<button type="button" id="reset_cancel" 
+													class="form-control 
+														  btn btn-default">
+
+									Cancel
+								</button>
+							</div>
+							<div class="col-md-6">
+								<button type="submit" class="form-control 
+															btn btn-default">
+									Change Password
+								</button>
+							</div>
+						</div>
+					</div>
+				</form>
+		    </div>
+		  </div>
+		</div>
+  	</div>
+</template>
+
+<!-- Allows the user to register -->
 
 <template name="register">
 	<form class="form-default register">
@@ -108,3 +239,77 @@
 <template name="verifyEmail">
 	Testing...!
 </template>
+
+<!-- 
+	Allows the user to change their password, while logged in
+-->
+
+<template name="change_password">
+	<!--<h1>TESTING!</h1>
+	-->
+	<div class="modal fade in" id="change_password_modal" 
+			tabindex="-1" role="dialog">
+		<div class="modal-dialog">
+		  <div class="modal-content">
+		    <div class="modal-header">
+		      <button type="button" class="close" data-dismiss="modal">
+				&times;
+			  </button>
+		      <h4 class="modal-title">Change Password</h4>
+		    </div>
+		    <div class="modal-body">
+		      {{#with userInfo}}
+				<form class="form-default change_password_form">
+					<div class="form-group">
+						<p>User: {{profile.first_name}} {{profile.surname}}</p>
+					</div>
+					<div class="form-group">
+						<label for="change_current_password">
+							Current Password: 
+						</label>
+						<input type="password" class="form-control required" 
+							id="change_current_password"
+							 name="change_current_password"
+							placeholder="Current Password" />
+					</div>
+					<div class="form-group">
+						<label for="change_new_password">New Password: </label>
+						<input type="password" class="form-control required" 
+							id="change_new_password" 
+							name="change_new_password"
+							placeholder="New Password" />
+					</div>
+					<div class="form-group">
+						<label for="change_reenter_password">
+							Re-enter Password:
+						</label>
+						<input type="password" class="form-control required"
+							id="change_reenter_password"
+							name="change_reenter_password"
+							placeholder="Re-enter Password" />
+					</div>
+					<div class="form-group">
+						<div class="row">
+							<div class="col-md-6">
+								<button type="button" id="change_cancel" 
+													class="form-control 
+														  btn btn-default">
+									Cancel
+								</button>
+							</div>
+							<div class="col-md-6">
+								<button type="submit" class="form-control 
+															btn btn-default">
+									Change Password
+								</button>
+							</div>
+						</div>
+					</div>
+				</form>
+			  {{/with}}
+		    </div>
+		  </div>
+		</div>
+  	</div>
+</template>
+
