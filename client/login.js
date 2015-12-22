@@ -111,7 +111,8 @@ Template.register.onRendered(function() {
 				get the email, and get full control over account
 			*/
 			userID = Accounts.createUser({
-						email: email,
+						username: email,
+						email: email+'@valenciacollege.edu',
 						//Randomly generate better password, for initial login...
 						password: 'password',
 						profile: {
@@ -144,7 +145,7 @@ Template.register.onRendered(function() {
 						}
 					});
 			//Clear the values, for the hell of it
-			$('[name=userID]').val('');
+			$('[name=email]').val('');
 			$('[name=lastName]').val('');
 			$('[name=firstName]').val('');
 		}

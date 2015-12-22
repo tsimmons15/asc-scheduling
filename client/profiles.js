@@ -9,7 +9,8 @@ Template.userProfile.helpers({
 Template.userProfile.events({
 	'click #resetPassword': function() {
 		console.log('Testing, resetPassword clicked');
-		Meteor.call('passwordReset', Meteor.userId());
+		console.log(Meteor.userId());
+		Router.go('reset_password');
 	}
 });
 

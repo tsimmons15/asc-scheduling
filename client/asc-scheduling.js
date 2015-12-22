@@ -1,3 +1,5 @@
+Meteor.subscribe('active_template');
+
 //The event handlers and helper functions for the code in the leaderboard.html file
 
 //Helper functions for the displayHeader template
@@ -16,22 +18,23 @@ Template.displayHeader.events({
 	}	 
 });
 
+//Helper functions for the navBrand template
+Template.navBrand.helpers({
+	//Tracks whether the home page is the current template
+	'activeIfTemplateIs': function(template) {
+		console.log(active_template(template));
+		return active_template(template);
+	}
+});
+
 //Helper functions for the navItems template
 Template.navItems.helpers({
 	//Supposed to handle the "current page", so that the header shows more visually
 	// what the currently active page
 	//Takes the current template
 	'activeIfTemplateIs': function(template) {
-		//Get the current "route"
-		var current = Router.current();
-		//If the two templates are the same
-		if (template == current.lookupTemplate()) {
-			//Return the active class
-			return 'active';
-		} else {
-			//return nothing
-			return '';
-		}
+		console.log(active_template(template));
+		return active_template(template);
 	}
 });
 
@@ -102,3 +105,21 @@ Template.eventVoting.onRendered( function() {
 		var index = $("li").index(el)- 1;
 	});
 });
+
+active_template = function(template) {
+	//If the two templates are the same
+	var current = Router.current().lookupTemplate();
+	console.log(typeof(template));
+	console.log(template);
+	console.log(typeof(current));
+	console.log(current);
+	console.log(template == current);
+	if (template == current) {
+		//Return the active class
+		console.log('This is the active class...');
+		return 'active';
+	} else {
+		//return nothing
+		return '';
+	}
+}

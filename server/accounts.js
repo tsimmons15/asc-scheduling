@@ -53,12 +53,9 @@ Accounts.emailTemplates.resetPassword.text = function (user, url) {
 Meteor.methods({
 	//Send the enrollment email, since a user has tried to register...
 	'userEnroll': function(userID, genPassword) {
-		console.log(userID);
-		console.log(genPassword);
 		Accounts.sendEnrollmentEmail(userID);
 	}, 
 	'passwordReset': function(userID) {
-		console.log(userID);
-		Accounts.sendResetPasswordEmail(userID);
+		
 	}
 });

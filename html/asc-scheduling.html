@@ -73,7 +73,7 @@ ctrl-f and look for the header to quickly move around the file
 
 <!-- This is the navBrand, if we wish to add a sort of logo, here would probably be another good spot for it-->
 <template name="navBrand">
-	<a class="navbar-brand" href="{{pathFor route='home'}}">Home</a>
+	<a class="navbar-brand {{activeIfTemplateIs 'home'}}" href="{{pathFor route='home'}}">Home</a>
 </template>
 
 <!-- These are the individual nav items, change this as the page grows/shrinks -->
@@ -87,7 +87,7 @@ ctrl-f and look for the header to quickly move around the file
 			 and we're in the tournament page
 			Another possible problem: tournament is too specific, need to make sure we're using the general template
 		-->
-	    <li class="{{activeIfTemplateIs 'tournament'}}"><a href="{{pathFor route='tournament'}}">Tournament</a></li>
+	    <li><a class="{{activeIfTemplateIs 'tournament'}}" href="{{pathFor route='tournament'}}">Tournament</a></li>
 		<!--active-->
 	</ul>
 	<ul class="nav navbar-nav navbar-right">
