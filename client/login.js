@@ -125,7 +125,10 @@ Template.register.onRendered(function() {
 							skill: [25.0, 25.0/3.0],
 							//The start and end of the user's shift
 							//This will probably be filled in with Tonny's port
-							shift: [0 , 0]
+							shift: [0 , 0],
+							//The choice most recently made by the 
+							//  user for event voting
+							choices: []
 						}
 					}, function(error) {
 						if(error) {
