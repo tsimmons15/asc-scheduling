@@ -16,6 +16,11 @@ Meteor.methods({
 	'userProfile': function(id) {
 		return Meteor.users.findOne({_id:id});
 	}, 
+	'find_logo': function() {
+		//If this needs to change, just make sure it is still in images
+		//Once the database gets finalized, store all pictures in database
+		return "/images/valencialogo.png";
+	},
 	//Update the list of activities 
 	//The original idea:
 	//	Set up a weighted average of the first n (default, 5?) items in the list
@@ -24,37 +29,14 @@ Meteor.methods({
 	//	So on, item k is worth 1/k
 	//	The problem with the weigted average is that after every vote, you need to
 	//   subtract off their previous vote, or some of their votes might become too heavy
-	'updateActivities': function(el, index) {
-		//Update the activities record, deleting previous change
-		
-		//Update the activities record with the new values the user chose to vote with
-		
-		//The shameful code below is history so we get the general idea of the form of the calls
-		//	Is completely wrong, just not enough to warrant deletion, yet...
-		/*Activities.update({order:{$gt: index}}, 
-						{$inc:{order: 1}},
-							{multi: true});
-		Activities.update({_id: el.id}, {$set: {order: index}});*/
-	},
-	'find_logo': function() {
-		//If this needs to change, just make sure it is still in images
-		//Once the database gets finalized, store all pictures in database
-		return "/images/valencialogo.png";
-	},
-	//The user has asked to submit a vote
 	'submit_vote': function(user_id, elements) {
-		//chooseCount will be implemented as an admin option in the future
-		var chooseCount = (4 < elements.length) ? 4 : elements.length;
-		
-		console.log(user_id);
-		console.log('The elements in the list...');
+		var voting_limit = Meteor.call('voting_limit');
+		var chooseCount = (voting_limit < elements.length) ? voting_limit : elements.length;
 		
 		//Find 
 		var choices = Meteor.users.findOne({_id:user_id}, {'profile.choices':1}).profile.choices;
 		//and remove the previous vote in the Activities master-list
 		for(i = 0; i < choices.length; i++) {
-			console.log('Value...');
-			console.log(Activities.findOne({_id:choices[i]}));
 			Activities.update({_id: choices[i]}, {$inc: {order: -(1/(i+1))}});
 		}
 		
@@ -63,7 +45,6 @@ Meteor.methods({
 		var choices = new Array();
 		for (i = 0; i < chooseCount; i++) {
 			var elem = elements[i];
-			console.log(elem);
 			Activities.update({_id:elem}, {$inc: {order: 1/(i+1)}});
 		}
 		
