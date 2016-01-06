@@ -1,6 +1,9 @@
 #List of to-do items for the asc-scheduling project
 
 - Port over the recess scheduling system Tonny created
+	- Found MySQL patch for Meteor
+		Details at https://github.com/numtel/meteor-mysql
+		Currently having a little trouble getting the MySQL connection
 - Fix issue with voting
 	- Probably just an issue with the server code being on client
 - Update user database with information provided by Anthony
