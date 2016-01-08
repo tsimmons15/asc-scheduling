@@ -3,7 +3,8 @@
 - Port over the recess scheduling system Tonny created
 	- Found MySQL patch for Meteor
 		Details at https://github.com/numtel/meteor-mysql
-		Currently having a little trouble getting the MySQL connection
+		Finally got a connection, though it's to a local server instance.
+		   Question: do we ultimately want the instance locally, or externally, located?
 - Fix issue with voting
 	- Probably just an issue with the server code being on client
 - Update user database with information provided by Anthony
