@@ -1,8 +1,17 @@
 #List of to-do items for the asc-scheduling project
 
 - Port over the recess scheduling system Tonny created
+<<<<<<< HEAD
 	X Most of the data fields have been implemented in the database
 	- Set up the functions to mimic the SQL queries
+=======
+	- Found MySQL patch for Meteor
+		Details at https://github.com/numtel/meteor-mysql
+		Finally got a connection, though it's to a local server instance.
+		   Question: do we ultimately want the instance locally, or externally, located?
+- Fix issue with voting
+	- Probably just an issue with the server code being on client
+>>>>>>> 6f97dbf2dd4bdf3adce8de4642e54a94b52a7c3a
 - Update user database with information provided by Anthony
 - Implement invitation system overhaul for Register page
 	- Validate email for @valenciacollege.edu

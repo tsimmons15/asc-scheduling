@@ -7,7 +7,7 @@
 
 <!--Template for the tournament page-->
 <template name="tournament">
-	{{#if verified}}
+	{{#if isVerified}}
 		<div class="row">
 			<div class="col-xs-6 col-md-4">
 				{{>currentStandings}}
@@ -17,7 +17,10 @@
 			</div>
 		</div>
 	{{else}}
-		
+		<p>Please register to be able to participate...</p>
+		<p>If you have and still see this message. please make sure to
+			verify your email.</p>
+		<p>If the problem persists....</p>
 	{{/if}}
 </template>
 

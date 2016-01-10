@@ -87,7 +87,10 @@ ctrl-f and look for the header to quickly move around the file
 			 and we're in the tournament page
 			Another possible problem: tournament is too specific, need to make sure we're using the general template
 		-->
-	    <li><a class="{{activeIfTemplateIs 'tournament'}}" href="{{pathFor route='tournament'}}">Tournament</a></li>
+	    <li><a class="{{activeIfTemplateIs 'tournament'}}" href="{{pathFor
+ 			route='tournament'}}">Tournament</a></li>
+		<li><a class="{{activeIfTemplateIs 'roster'}}" href="{{pathFor 
+			route='roster'}}">Roster</a></li>
 		<!--active-->
 	</ul>
 	<ul class="nav navbar-nav navbar-right">

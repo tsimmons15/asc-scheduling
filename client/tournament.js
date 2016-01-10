@@ -5,8 +5,8 @@
 };*/
 
 Template.tournament.helpers({
-	'verified': function() {
-		return Meteor.users().emails[0].verified;
+	'isVerified': function() {
+		return Meteor.user().emails[0].verified;
 	}
 });
 

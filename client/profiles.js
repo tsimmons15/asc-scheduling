@@ -1,7 +1,7 @@
 //Helper functions for the user's profile template
 Template.userProfile.helpers({
 	//Return whether the user is a verified user
-	 'verified': function() {
+	 'isVerified': function() {
 		return Meteor.user().emails[0].verified;
 	 }
 });
