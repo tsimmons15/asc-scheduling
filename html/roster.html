@@ -1,0 +1,96 @@
+<!-- 
+	 This html file contains the templates involved in showing/generating
+		the recess roster used in the leaderboard system
+-->
+
+<template name="chosen_list">
+	<ul class="list-group">
+		{{#each getList}}
+			<li class="list-group-item" id="{{id}}">{{name}}&nbsp;{{department}}</li>
+		{{/each}}				
+	</ul>
+</template>
+
+<template name="roster">
+	<div class="row" >
+		<div class="col-md-3">
+			<div>
+				<p>8:00 Time Slot</p>
+				
+				{{> chosen_list timeslot=800}}
+			</div>
+		</div>
+		<div class="col-md-3">
+			<div>
+				<p>8:30 Time Slot</p>
+			
+				{{> chosen_list timeslot=830}}
+			</div>
+		</div>
+		<div class="col-md-3">
+			<div>
+				<p>9:00 Time Slot</p>
+			
+				{{> chosen_list timeslot=900}}
+			</div>
+		</div>
+		<div class="col-md-3">
+			<div>
+				<p>9:30 Time Slot</p>
+				{{> chosen_list timeslot=930}}
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-md-3">
+			<div>
+				<p>15:00 Time Slot</p>
+				{{> chosen_list timeslot=1500}}
+			</div>
+		</div>
+		<div class="col-md-3">
+			<div>
+				<p>15:30 Time Slot</p>
+				{{> chosen_list timeslot=1530}}
+			</div>
+		</div>
+		<div class="col-md-3">
+			<div>
+				<p>16:00 Time Slot</p>
+				{{> chosen_list timeslot=1600}}
+			</div>
+		</div>
+		<div class="col-md-3">
+			<div>
+				<p>16:30 Time Slot</p>
+				{{> chosen_list timeslot=1630}}
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-md-3">
+			<div>
+				<p>17:00 Time Slot</p>
+				{{> chosen_list timeslot=1700}}
+			</div>
+		</div>
+		<div class="col-md-3">
+			<div>
+				<p>17:30 Time Slot</p>
+				{{> chosen_list timeslot=1730}}
+			</div>
+		</div>
+		<div class="col-md-3">
+			<div>
+				<p>18:00 Time Slot</p>
+				{{> chosen_list timeslot=1800}}
+			</div>
+		</div>
+		<div class="col-md-3">
+			<div>
+				<p>18:30 Time Slot</p>
+				{{> chosen_list timeslot=1830}}
+			</div>
+		</div>
+	</div>
+</template>
