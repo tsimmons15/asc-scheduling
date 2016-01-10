@@ -1,4 +1,6 @@
 var Fibers = Npm.require('fibers');
+var Futures = Npm.require('fibers/future');
+
 
 var rosterDB = new LiveMysql({
 	host: 'localhost',
@@ -20,6 +22,18 @@ process.on('SIGTERM', closeAndExit);
 // Close connections on exit (ctrl + c)
 process.on('SIGINT', closeAndExit);
 
+Meteor.startup(function() {
+	update_list();
+
+	//Cron documentation (sort of):
+	//   https://atmospherejs.com/mrt/cron
+	var cron = new Meteor.Cron( {
+		events: {
+			'0 0 * * 1-5' : update_list
+		}
+	});
+});
+
 Meteor.publish('allPlayers', function() {
 	return rosterDB.select(
 		'SELECT * FROM computerprogramming',
@@ -27,54 +41,140 @@ Meteor.publish('allPlayers', function() {
 		);
 });
 
+eligiblePlayersAllDepartmentsOneTimeSlot = [];
+allPlayersAllDepartments 				 = [];
+
 timeSlots = {
-	'800': [
-	],
-	'830': [
-	],
-	'900': [
-	],
-	'930': [
-	],
-	'1500': [
-	],
-	'1530': [
-	],
-	'1600': [
-	],
-	'1630': [
-	],
-	'1700': [
-	],
-	'1730': [
-	],
-	'1800': [
-	],
-	'1830': [
-	]
+	'800' : ReactiveVar([]),
+	'830' : ReactiveVar([]),
+	'900' : ReactiveVar([]),
+	'930' : ReactiveVar([]),
+	'1500': ReactiveVar([]),
+	'1530': ReactiveVar([]),
+	'1600': ReactiveVar([]),
+	'1630': ReactiveVar([]),
+	'1700': ReactiveVar([]),
+	'1730': ReactiveVar([]),
+	'1800': ReactiveVar([]),
+	'1830': ReactiveVar([])
 };
 
 Meteor.methods({
-	'testing': function() {
-		
-	},
 	'timeSlots': function(time) {
-		this.unblock();
+		console.log('Getting timeSlots...');
+		console.log(timeSlots[time]);
 		return timeSlots[time];
 	}
 });
+
+
+var update_list = function() {
+	for(i in timeSlots) {
+		timeSlots[i].set([]);
+	}
+	eligiblePlayersAllDepartmentsOneTimeSlot = [];
+	allPlayersAllDepartments 				 = [];
+
+	Fibers(function(){
+		main();
+	}).run();
+}
+
+function main() {
+	// erase list containing people that have been picked today. This is needed if the application has already been launched once, and the user presses the "update tables" button twice.
+	//uniquePersonIDList.Clear();
+	//Clear form
+	//Not my comment ->//int numberOfTutorsAtWork;
+	//currentDayTxt.Text = currentDay.ToUpper() + " " + 
+	//						DateTime.Now.ToString("MM/dd");
+
+	// Get current date in yyyyMMdd format
+	currentDate = getDate();
+	// get last launch date from database
+	lastAppLaunchDate = getLastLaunchDate();
+
+	// set boolean value used to determine whether or not numberOfGamesPlayed should be updated for eligible players. 
+	// Used to determine if app has already been launched once today. If it has, there is no need to update games_played values again.
+	if (lastAppLaunchDate === currentDate)
+	{
+		loadTodaysRecessPeople();
+		console.log('Just loaded todaysRecessPeople');
+		for(i in timeSlots) {
+			console.log('After: ');
+			console.log(timeSlots[i].get());
+		}
+	}
+	else
+	{
+		// truncate todaysRecessPeople table
+		truncateTable("todaysrecesspeople");
+
+		departmentsArray = [ "welcomedesk", "chemistry", "testingcenter", "asl", "computerprogramming", "economics", "foreignlanguage", "communication", "msc_ia", "management", "msc", "spa", "music", "accounting", "ost", "histgovt", "physics", "biology", "gen_tut_ia" ];
+
+		// parallel arrays
+		shiftStartArray = [ 800, 830, 900, 930, 1500, 1530, 1600, 1630, 1700, 1730, 1800, 1830 ];
+		shiftEndArray = [ 830, 900, 930, 1000, 1530, 1600, 1630, 1700, 1730, 1800, 1830, 1900 ];
+		for (var j = 0; j < shiftStartArray.length; j++)
+		{
+		    for (var i = 0; i < departmentsArray.length; i++)
+		    {
+				minEmployeesNeeded = 
+						getHourlyMinRequiredStaff(departmentsArray[i], shiftStartArray[j]);
+				var numberOfTutorsAtWork = 
+						getNumTutorsAtWork(departmentsArray[i], shiftStartArray[j], shiftEndArray[j], getDayOfWeek());
+		        getPlayers(departmentsArray[i], shiftStartArray[j], shiftEndArray[j], numberOfTutorsAtWork, minEmployeesNeeded);
+		    }
+
+	        for (i in eligiblePlayersAllDepartmentsOneTimeSlot)
+	        {
+	            randomUniqueId = eligiblePlayersAllDepartmentsOneTimeSlot[i].ranuniqueid;
+	            numberOfGamesPlayedPerMonth = eligiblePlayersAllDepartmentsOneTimeSlot[i].numGamesPlayedPerMonth;
+
+	            /* This Boolean determines whether or not a user's games_played value should be incremented. If the app is launched twice (or more) 
+	            times in one day there is no need to increment games_played, because it has already happened once.*/
+	            //if (shouldUpdateGamesPlayedValue)
+	            //{
+	            // Update number of games played for current user
+	            numberOfGamesPlayedPerMonth = updateNumGamesPlayed(randomUniqueId, numberOfGamesPlayedPerMonth);
+	            //}
+
+	            name = eligiblePlayersAllDepartmentsOneTimeSlot[i].name;
+	            department = eligiblePlayersAllDepartmentsOneTimeSlot[i].department;
+	            shiftStart = eligiblePlayersAllDepartmentsOneTimeSlot[i].shiftstart;
+	            shiftEnd = eligiblePlayersAllDepartmentsOneTimeSlot[i].shiftend;
+
+	            // Add the person to the graphical user interface
+	            addPersonToList(name, department, shiftStart, numberOfGamesPlayedPerMonth);
+
+	            // Add person to list that keeps track of all the people that have had a recess today.
+	            allPlayersAllDepartments.push(randomUniqueId);
+
+	            // Add person to table todaysRecessPeople
+	            addPersonToTodaysRecessPeople(name, department, shiftStart, numberOfGamesPlayedPerMonth);
+	        }
+
+		    // Clear the list to get ready for the next time slot.
+		    eligiblePlayersAllDepartmentsOneTimeSlot = [];
+		}
+		// write current date to 'meta' table
+		writeCurrentDateToMetaTable();
+		console.log('Just finished compiling the list');
+		for(i in timeSlots) {
+			console.log('After: ');
+			console.log(timeSlots[i].get());
+		}
+    }
+}
+
 
 function getLastLaunchDate() {
 	date = "";
 	var fiber = Fibers.current;
 	stmt = "SELECT lastdatelaunch FROM meta WHERE ID = 1";
-	
 	rosterDB.db.query(stmt, function(err, rows, fields) {
 		fiber.run(rows[0].lastdatelaunch);
 	});
-	
 	date = Fibers.yield();
-	
 	return date;
 }
 
@@ -88,6 +188,55 @@ function writeCurrentDateToMetaTable() {
 		if(err)
 			console.log(err);
 	})
+}
+
+function updateNumGamesPlayed(ranUniqueId, numGamesPlayedPerMonth) {
+	currMonth = getCurrMonthAbbr();
+	
+	numGamesPlayedPerMonth++;
+
+	stmt = "UPDATE games_played_per_month SET " + 
+			currMonth + " = " + numGamesPlayedPerMonth +
+		   " WHERE ranuniqueid = " + ranUniqueId;
+	rosterDB.db.query(stmt, function(err, rows,fields) {
+		if (err) {
+			console.log(err);
+		}
+	});
+	return numGamesPlayedPerMonth;
+}
+
+function getNumTutorsAtWork(department, shiftStart, shiftEnd, currentDay) {
+	numTutorsAtWork = -1;
+	
+	var fiber = Fibers.current;
+
+	stmt = "SELECT COUNT(1) as count FROM " + department + " WHERE " + 
+			currentDay + "_start != 0 AND " + 
+			currentDay + "_start <= " + shiftStart + " AND " +
+			currentDay + "_end >= " + shiftEnd;
+	rosterDB.db.query(stmt, function(err, rows, fields) {
+		if(err) {
+			console.log(err);
+		}
+		if (rows && rows.length > 0)
+			fiber.run(rows[0].count);
+	});
+	numTutorsAtWork = Fibers.yield();
+
+	return numTutorsAtWork;
+}
+
+//There might be an optimization we can do here....
+function hadRecessToday(uniquePersonID) {
+	for(i in allPlayersAllDepartments) {
+		if(allPlayersAllDepartments[i].ranuniqueid == uniquePersonID) {
+			return true;
+		}
+	}
+
+	//Assume false
+	return false;
 }
 
 function getDate() {
@@ -131,61 +280,6 @@ function getDayOfWeek() {
 	}
 
 	return currentDay;
-}
-
-function updateNumGamesPlayed(ranUniqueId, numGamesPlayedPerMonth) {
-	currMonth = getCurrMonthAbbr();
-	
-	numGamesPlayedPerMonth++;
-
-	stmt = "UPDATE games_played_per_month SET " + 
-			currMonth + " = " + numGamesPlayedPerMonth +
-		   " WHERE ranuniqueid = " + ranUniqueId;
-	
-	rosterDB.db.query(stmt, function(err, rows,fields) {
-		if (err) {
-			console.log(err);
-		}
-		console.log(rows);
-		console.log(fields);
-	});
-
-	return numGamesPlayedPerMonth;
-}
-
-function getNumTutorsAtWork(department, shiftStart, shiftEnd, currentDay) {
-	numTutorsAtWork = -1;
-	
-	var fiber = Fibers.current;
-
-	stmt = "SELECT COUNT(1) FROM " + department + " WHERE " + 
-			currentDay + "_start != 0 AND " + 
-			currentDay + "_start <= " + shiftStart + " AND " +
-			currentDay + "_end >= " + shiftEnd;
-	
-	rosterDB.db.query(stmt, function(err, rows, fields) {
-		if(err) {
-			console.log(err);
-		}
-		fiber.run(rows);
-	});
-
-	numTutorsAtWork = Fibers.yield();
-	
-	return numTutorsAtWork;
-}
-
-//There might be an optimization we can do here....
-function hadRecessToday(uniquePersonID) {
-	/*
-	foreach (person in chosenList) {
-		if (person == uniquePersonID) {
-			return true; // They have had recess
-		}
-	}
-	*/
-	//Assume false
-	return false;
 }
 
 function getCurrMonthAbbr() {
@@ -235,20 +329,19 @@ function getCurrMonthAbbr() {
 
 function getNumGamesPlayedPerMonth(ranUniqueId) {
 	addRanUniqueIdToGamesPlayedPerMonthTable(ranUniqueId);
-	var fiber = Fibers.current;
+	var future = new Futures;
 	month = getCurrMonthAbbr();
 	numRecesses = -1;
 	
-	stmt = "SELECT " + month + " FROM games_played_per_month " +
+	stmt = "SELECT " + month + " as count FROM games_played_per_month " +
 			"WHERE ranuniqueid = " + ranUniqueId;
 	rosterDB.db.query(stmt, function(err, rows, fields) {
 		if (err)
 			console.log(err);
-		fiber.run(rows);
+		future.return(rows[0].count);
 	});
-	numRecesses = Fibers.yield();
 
-	return numRecesses;
+	return future.wait();
 }
 
 function addRanUniqueIdToGamesPlayedPerMonthTable(ranUniqueId) {
@@ -258,15 +351,12 @@ function addRanUniqueIdToGamesPlayedPerMonthTable(ranUniqueId) {
 		if (err) {
 			console.log(err);
 		}
-		console.log('Test');
-		console.log(rows);
-		console.log(fields);
 	});
 }
 
 function getPlayers(department, shiftStart, shiftEnd, numTutorsAtWork, minTutorsNeeded) {
 	limit = numTutorsAtWork - minTutorsNeeded;
-	
+	var eligiblePlayersOneDepartment = [];
 	if (limit > 0) {
 		stmt = "SELECT name, " + currentDay + "_start, " +
 				currentDay + "_end, ranuniqueid FROM " +
@@ -274,63 +364,85 @@ function getPlayers(department, shiftStart, shiftEnd, numTutorsAtWork, minTutors
 				currentDay + "_start != 0 AND " +
 				currentDay + "_start <= " + shiftStart + " AND " +
 				currentDay + "_end >= " + shiftEnd;
-		//Query here
-		/*
-		while (rdr.Read())
-        {
-            string name = rdr.GetString(0);
-            int ranUniqueId = rdr.GetInt32(3);
-            int numGamesPlayedPerMonth = getNumGamesPlayedPerMonth(ranUniqueId);
-            Fibers(function() {
-			numGamesPlayedPerMonth = getNumGamesPlayedPerMonth(123456789);
-		}).run();
 
-            // Check if this person has already been scheduled for a recess today.
-		    //  If he hasn't, the IF statement is true, and the body will execute.
-            // Also, check if this person has had already reached the 
-			//   monthly limit of recesses.
-            if (!hadRecessToday(ranUniqueId) && 
-				numGamesPlayedPerMonth <= monthlyRecessLimit)
-            {
-                // This dictionary contains a list of all eligible players. 
-				//  It will be sorted based on number of games played.
-                eligiblePlayersOneDepartment.Add(
-					new Player(name, department, numGamesPlayedPerMonth,
-								 ranUniqueId, shiftStart, shiftEnd));
-            }
-        }
-		*/
+		var fiber = Fibers.current;
 
-		//eligiblePlayersOneDepartment.Sort();
-		
-		/*
-		for (var i = 0; i < limit && i < eligiblePlayersOneDepartment.COunt; i++) {
-			name = eligiblePlayersOneDepartment[i].Name;
-			numGamesPlayedPerMonth = eligiblePlayersOneDepartment[i].GamesPlayed;
-			randomUniqueId = eligiblePlayersOneDepartment[i].RanUniqueId;
-			eligiblePlayersAllDepartmentsOneTimeSlot.Add(
-				new Player(name, department, numGamesPlayedPerMonth,
-							randomUniqueId, shiftStart, shiftEnd));
-		}
-		*/
+		rosterDB.db.query(stmt, function(err, rows, fields) {
+			if(err) {
+				console.log(err);
+			}
+			
+			for( i in rows ) {
+				var name = rows[i].name;
+				var ranUniqueId = rows[i].ranuniqueid;
+				numGamesPlayedPerMonth = 0;
+				Fibers(function(){
+					numGamesPlayedPerMonth = getNumGamesPlayedPerMonth(ranUniqueId);
+				}).run();
+				// Check if this person has already been scheduled for a recess today.
+		    	//  If he hasn't, the IF statement is true, and the body will execute.
+            	// Also, check if this person has had already reached the 
+				//   monthly limit of recesses.
+				//Issue with the recessLimits and async... Come back later to remove hard-code
+            	if (!hadRecessToday(ranUniqueId) && numGamesPlayedPerMonth <= 7) {
+	                // This dictionary contains a list of all eligible players. 
+					//  It will be sorted based on number of games played.
+					eligiblePlayersOneDepartment.push({
+						'name': name, 
+						'department': department,
+						'numGamesPlayedPerMonth': numGamesPlayedPerMonth,
+						'ranuniqueid': ranUniqueId,
+						'shiftstart': shiftStart,
+						'shiftend': shiftEnd
+					});
+	            }
+			}
 
-		//eligiblePlayersOneDepartment.Clear();
+			eligiblePlayersOneDepartment.sort( function(a,b) {
+				field = 'numGamesPlayedPerMonth';
+				if(a[field] > b[field]) {
+					return 1;
+				} else if(a[field] < b[field]) {
+					return -1;
+				} 
+
+				return 0;
+			});
+
+			for (i in eligiblePlayersOneDepartment) {
+				if (--limit <= 0){
+					break;
+				}
+
+				name = eligiblePlayersOneDepartment[i].name;
+				numGamesPlayedPerMonth = eligiblePlayersOneDepartment[i].numGamesPlayedPerMonth;
+				randomUniqueId = eligiblePlayersOneDepartment[i].ranuniqueid;
+				eligiblePlayersAllDepartmentsOneTimeSlot.push({
+					'name': name, 
+					'department': department,
+					'numGamesPlayedPerMonth': numGamesPlayedPerMonth,
+					'ranuniqueid': ranUniqueId,
+					'shiftstart': shiftStart,
+					'shiftend': shiftEnd
+				});
+			}
+
+			fiber.run('');
+		});
+		Fibers.yield();
 	}
 }
 
 function getHourlyMinRequiredStaff(department, shiftStart) {
 	stmt = "SELECT minstaff FROM hourlyminstaffonduty WHERE " +
 		   "department = '" + department + "' AND time = " + shiftStart;
-	result = 'Test';
 	var fiber = Fibers.current;
-
 	var test = rosterDB.db.query(stmt, function(err, rows, fields) {
 		if(err) {
 			console.log(err);
 		}
 		fiber.run(rows[0].minstaff);
 	});
-
 	var results = Fibers.yield();
 	return results;
 }
@@ -417,23 +529,17 @@ function addPersonToTodaysRecessPeople(name, department, shiftStart, gamesPlayed
 		   "\"" + department + "\", " +
 		   		  shiftStart + "," +
 				  gamesPlayed + ");";
-
 	rosterDB.db.query(stmt, function(err, row, fields) {
 		if (err) {
 			console.log(err);
 		}
-		console.log(row);
-		console.log(fields);
 	});
 }
 
 function loadTodaysRecessPeople() {
 	stmt = "SELECT name, department, shiftstart," + 
 			"games_played FROM todaysrecesspeople";
-	
-	for (i in timeSlots) {
-		timeSlots[i] = [];
-	}
+
 	rosterDB.db.query(stmt, function(error, row, fields) {
 		if(error) {
 			console.log('Well, shit...');
@@ -450,13 +556,10 @@ function loadTodaysRecessPeople() {
 
 function addPersonToList(name, department, shiftStart, games_played) {
 	department = getFormattedDepartmentNames(department);
-	
-	additionalPlayerInfo = [name, department];
-	console.log(name, department, shiftStart, games_played);
-	timeSlots[shiftStart].push({
+	console.log('Adding ' + name + ' to timeSlots[' + shiftStart + '].');
+	timeSlots[shiftStart].get().push({
 		'games_played': games_played,
 		'department': department,
 		'name': name
 	});
-	console.log(timeSlots[shiftStart]);
 }

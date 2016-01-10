@@ -3,10 +3,11 @@
 
 Template.chosen_list.onCreated(function() {
 	var self = this;
-    self.resources = new ReactiveVar(null);
     Meteor.call("timeSlots", this.data.timeslot, function(error, list) {
       if (!error) {
-        self.resources.set(list);
+      	console.log('onCreated');
+        self.resources = list;
+        console.log(self.resources);
       } else {
          console.log(error);
       }
@@ -17,9 +18,10 @@ Template.chosen_list.onCreated(function() {
 //The helper functions for the chosen_list template
 Template.chosen_list.helpers({
 	'getList': function() {
-		console.log('Testing...');
-		console.log(Template.instance().resources.get());
-		return Template.instance().resources.get();
+		if(!Template.instance().resources)
+			return [];
+		console.log(Template.instance().resources.get().curValue);
+		return Template.instance().resources.get().curValue;
 	}
 });
 
