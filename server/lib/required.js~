@@ -1,6 +1,0 @@
-//The MeteorJS implementation of trueskill
-trueskill = Meteor.npmRequire('trueskill');
-
-//JQuery accessible on the server
-jsdom = Meteor.npmRequire("jsdom");
-$ = Meteor.npmRequire('jquery')(jsdom.jsdom().parentWindow);
